@@ -36,3 +36,12 @@
 git clone
 docker-compose up --build
 ```
+
+# Ручной запуск
+
+1. Запуск RabbitMQ
+2. Установка зависимостей `pip install -r requirements.txt`
+3. Запуск вебсервера `uvicorn api:app --host 0.0.0.0 --port 80`
+4. Запуск слушателя `python listener.py`
+5. Отправка запросов на `http://localhost/AddTasks` (POST с телом JSON, подобным примеру выше) и `http://localhost/GetStats` (GET)
+6. Вывод в терминале слушателя.
