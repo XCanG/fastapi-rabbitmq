@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+    rabbit1:
+        image: "rabbitmq:3-management"
+        hostname: rabbit1
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "TESTVOLUME"
+            RABBITMQ_DEFAULT_USER: "guest"
+            RABBITMQ_DEFAULT_PASS: "guest"
+            RABBITMQ_DEFAULT_VHOST: "/"
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        labels:
+            NAME: "rabbitmq1"
+        networks:
+            - back
+        tty: true
+        volumes:
+            - rabbit1:/var/lib/rabbitmq
+            - ./conf/:/etc/rabbitmq/
+        command: bash -c "sleep 10; rabbitmq-server;"
+
+    web:
+        build: .
+        ports:
+            - 80:80
+        volumes:
+            - .:/code
+        command: uvicorn main:app --host 0.0.0.0 --port 80
+        depends_on:
+            - rabbit1
+
+    listener:
+        build: .
+        volumes:
+            - .:/code
+        command: python listener.py
+        depends_on:
+            - rabbit1
+            - web
+
+volumes:
+    rabbit1:
+        driver: local
+
+networks:
+    back:
