@@ -3,7 +3,7 @@ EXPOSE 4369 5671 5672 25672
 # RUN rabbitmq-plugins enable --offline rabbitmq_management
 CMD ["rabbitmq-server"]
 
-FROM python:3.12.0a1-alpine
+FROM python:3.12.0a6-alpine
 WORKDIR /code
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
